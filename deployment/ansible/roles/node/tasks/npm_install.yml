@@ -1,0 +1,5 @@
+---
+- name: Running NPM install
+  npm: path={{homeDir}}/{{appDir}}/{{projectRepo}}
+  register: npm_finished
+  when: git_finished.changed

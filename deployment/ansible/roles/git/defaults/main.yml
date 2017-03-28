@@ -1,0 +1,5 @@
+homeDir: /home/ubuntu
+appDir: apps
+privateKey: /Users/user/.ssh/id_rsa
+account: andela-ofamakinde
+repo: ansible-demo-app

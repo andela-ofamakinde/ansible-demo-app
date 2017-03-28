@@ -1,0 +1,26 @@
+---
+- name: Check if Nginix is Installed
+  command: test -x /usr/sbin/nginx
+  register: nginix_present
+
+- name: NGINX | Add NGINX APT KEY
+  apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
+  when: ansible_os_family == "Debian" and nginix_present|failed
+  become: yes
+
+
+- name: NGINX | Add Ubuntu apt repository
+  apt_repository: repo="deb http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release }} nginx"
+  when: ansible_os_family == "Debian" and nginix_present|failed
+  become: yes
+
+- name: NGINX | Installing NGINX
+  apt:
+    update_cache: yes
+    pkg: nginx
+    state: latest
+
+- name: NGINX | Starting NGINX
+  service:
+    name: nginx
+    state: started

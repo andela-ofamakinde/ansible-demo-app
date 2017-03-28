@@ -1,0 +1,21 @@
+{
+    "test" : {
+        "driver" : "pg",
+        "host" : "localhost",
+        "database" : "test_db"
+    },
+
+     "dev" : {
+        "driver" : "pg",
+        "host" : "localhost",
+        "database" : "test_db"
+    },
+
+     "prod" : {
+        "driver" : "pg",
+        "host" : "localhost",
+        "database" : "test_db"
+    },
+
+    "rds": {"ENV": "postgres://localhost/test_db"}
+}

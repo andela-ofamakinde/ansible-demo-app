@@ -1,0 +1,36 @@
+---
+- name: NodeJS | Check if is present
+  command: test -x /usr/bin/node
+  register: node_present
+
+- name: NodeJS | package dependencies
+  apt: pkg={{item}} state=present
+  with_items:
+      - git
+
+- name: NodeJS | Import the NodeSource GPG key
+  shell: curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key state=present
+  when: ansible_os_family == "Debian" and node_present|failed
+
+- name: NodeJS | Add NodeSource deb repository
+    apt_repository: repo='deb https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main' state=present
+    when: ansible_os_family == "Debian" and node_present|failed
+
+- name: NodeJS | Add NodeSource deb-src repository
+    apt_repository: repo='deb-src https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main' state=present
+    when: ansible_os_family == "Debian" and node_present|failed
+
+- name: NodeJS | Install Node.js
+  apt: pkg=nodejs={{ nodejs_version }}.* state=installed update_cache=yes
+  when: ansible_os_family == "Debian" and nodejs_version in [ "0.10", "0.12" ]  and node_present|failed
+
+ - name: NodeJS | Update npm
+  shell: npm install -g npm
+  when: ansible_os_family == "Debian" and node_present|failed
+
+- name: NodeJS | Install NodeJs
+  apt:
+    pkg:
+      - nodejs
+    state: installed
+    update_cache: yes
