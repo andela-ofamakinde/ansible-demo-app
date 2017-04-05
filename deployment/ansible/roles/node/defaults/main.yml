@@ -1,5 +1,0 @@
-nodejs_version :  "5.x"
-ansible_distribution_release :
-homeDir: /home/ubuntu
-appDir: apps
-projectRepo: ansible-demo-app

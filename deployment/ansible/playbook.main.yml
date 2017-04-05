@@ -1,8 +1,0 @@
----
-- hosts: www
-  become: yes
-  become_user: sudo
-  roles:
-    - git
-    - nginx
-    - node

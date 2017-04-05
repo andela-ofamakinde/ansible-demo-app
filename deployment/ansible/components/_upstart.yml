@@ -1,0 +1,15 @@
+- name: NPM install
+  npm: path={{homeDir}}/{{appDir}}/api
+  register: npm_finished
+  when: git_finished.changed
+
+- name: Start Demo App
+  sudo_user: ubuntu
+  command: pm2 start index.js --name app chdir={{homeDir}}/{{appDir}}/{{projectRepo}}
+  ignore_errors: yes
+  when: npm_finished.changed
+
+- name: Stop Demo APP
+  sudo_user: ubuntu
+  command: pm2 stop app chdir={{homeDir}}/{{appDir}}/{{projectRepo}}
+  ignore_errors: yes

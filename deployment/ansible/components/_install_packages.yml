@@ -1,4 +1,13 @@
 ---
+- name: Install Packages
+  apt: name={{ item }} update_cache=yes state=latest
+  with_items:
+    - npm
+    - git
+
+- name: Install pm2
+  npm: name=pm2 global=yes production=yes
+
 - name: Check if Nginix is Installed
   command: test -x /usr/sbin/nginx
   register: nginix_present

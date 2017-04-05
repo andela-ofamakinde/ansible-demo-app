@@ -1,0 +1,20 @@
+---
+- hosts: www
+  become: yes
+  become_user: sudo
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Bootstrap | Install Packages
+      include: components/__install_packages.yml
+
+    - name: Bootstrap | Install Node
+      include: components/__install_node.yml
+
+    - name: Bootstrap | Clone Project Repo
+      include: components/__clone_repo.yml
+
+    - name: Bootstrap | Upstart
+      include: components/_upstart.yml
