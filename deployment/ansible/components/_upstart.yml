@@ -5,11 +5,5 @@
 
 - name: Start Demo App
   sudo_user: ubuntu
-  command: pm2 start index.js --name app chdir={{homeDir}}/{{appDir}}/{{projectRepo}}
-  ignore_errors: yes
-  when: npm_finished.changed
-
-- name: Stop Demo APP
-  sudo_user: ubuntu
-  command: pm2 stop app chdir={{homeDir}}/{{appDir}}/{{projectRepo}}
+  command: pm2 start index.js --name app chdir={{homeDir}}/{{appDir}}
   ignore_errors: yes

@@ -1,7 +1,9 @@
+'use strict';
+
 var express = require('express');
 var port = 3000;
-let app = express();
-let db = require('./api/utils/connect');
+var app = express();
+var db = require('./api/utils/connect');
 
 app.use('/', function(req, res) {
     res.status(200).json({message: "Application Running"});

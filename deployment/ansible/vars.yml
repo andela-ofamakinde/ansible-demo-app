@@ -1,6 +1,5 @@
 ---
 nodejs_version: "5.x"
-ansible_distribution_release :
 homeDir: /home/ubuntu
 appDir: apps
 projectRepo: ansible-demo-app
@@ -8,4 +7,5 @@ homeDir: /home/ubuntu
 appDir: apps
 privateKey: /Users/user/.ssh/id_rsa
 account: andela-ofamakinde
+applicationRepo: git@github.com:andela-ofamakinde/ansible-demo-app.git
 repo: ansible-demo-app

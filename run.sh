@@ -1,0 +1,1 @@
+ansible-playbook -vvvv -i ./deployment/ansible/hosts ./deployment/ansible/box.yml

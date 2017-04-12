@@ -3,44 +3,44 @@
   command: test -x /usr/bin/node
   register: node_present
   tags:
-    -node
+    -nodeJS
+  ignore_errors: true
 
 - name: NodeJS | package dependencies
   apt: pkg={{item}} state=present
   with_items:
       - git
   tags:
-    -node
+    -nodeJS
+  become: yes
 
 - name: NodeJS | Import the NodeSource GPG key
-  shell: curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key state=present
+  shell: curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add
   when: ansible_os_family == "Debian" and node_present|failed
   tags:
-    -node
+    -nodeJS
+  become: yes
 
 - name: NodeJS | Add NodeSource deb repository
-    apt_repository: repo='deb https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main' state=present
-    when: ansible_os_family == "Debian" and node_present|failed
-    tags:
-      -node
+  apt_repository: repo='deb https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main' state=present
+  when: ansible_os_family == "Debian" and node_present|failed
+  tags:
+    -nodeJS
+  become: yes
 
 - name: NodeJS | Add NodeSource deb-src repository
-    apt_repository: repo='deb-src https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main' state=present
-    when: ansible_os_family == "Debian" and node_present|failed
-    tags:
-      -nodeJS
+  apt_repository: repo='deb-src https://deb.nodesource.com/node_{{ nodejs_version }} {{ ansible_distribution_release }} main' state=present
+  when: ansible_os_family == "Debian" and node_present|failed
+  tags:
+    -nodeJS
+  become: yes
 
 - name: NodeJS | Install Node.js
   apt: pkg=nodejs={{ nodejs_version }}.* state=installed update_cache=yes
   when: ansible_os_family == "Debian" and nodejs_version in [ "0.10", "0.12" ]  and node_present|failed
   tags:
     -nodeJS
-
- - name: NodeJS | Update npm
-  shell: npm install -g npm
-  when: ansible_os_family == "Debian" and node_present|failed
-  tags:
-    -nodeJS
+  become: yes
 
 - name: NodeJS | Install NodeJs
   apt:
@@ -50,8 +50,15 @@
     update_cache: yes
   tags:
     -nodeJS
+  become: yes
 
-  - name: Running NPM install
-    npm: path={{homeDir}}/{{appDir}}/{{projectRepo}}
-    register: npm_finished
-    when: git_finished.changed
+- name: NodeJS | Update npm
+  shell: npm install -g npm
+  when: ansible_os_family == "Debian" and node_present|failed
+  tags:
+    -nodeJS
+  become: yes
+
+- name: Install pm2
+  npm: name=pm2 global=yes production=yes
+  become: yes

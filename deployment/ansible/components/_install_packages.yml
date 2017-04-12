@@ -1,22 +1,19 @@
 ---
 - name: Install Packages
   apt: name={{ item }} update_cache=yes state=latest
+  become: yes
   with_items:
-    - npm
     - git
-
-- name: Install pm2
-  npm: name=pm2 global=yes production=yes
 
 - name: Check if Nginix is Installed
   command: test -x /usr/sbin/nginx
   register: nginix_present
+  ignore_errors: true
 
 - name: NGINX | Add NGINX APT KEY
   apt_key: url=http://nginx.org/keys/nginx_signing.key state=present
   when: ansible_os_family == "Debian" and nginix_present|failed
   become: yes
-
 
 - name: NGINX | Add Ubuntu apt repository
   apt_repository: repo="deb http://nginx.org/packages/ubuntu/ {{ ansible_distribution_release }} nginx"
@@ -28,8 +25,12 @@
     update_cache: yes
     pkg: nginx
     state: latest
+  become: yes
+  when: nginix_present | failed
 
 - name: NGINX | Starting NGINX
   service:
     name: nginx
     state: started
+  become: yes
+  when: nginix_present | failed
