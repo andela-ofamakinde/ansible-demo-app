@@ -8,4 +8,4 @@ gulp.task('nodemon', function() {
     })
 });
 
-gulp.task('start', ['nodemon']);s
+gulp.task('start', ['nodemon']);

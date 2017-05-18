@@ -1,1 +1,1 @@
-ansible-playbook -vvvv -i ./deployment/ansible/hosts ./deployment/ansible/box.yml
+ansible-playbook -v -i ./deployment/ansible/hosts ./deployment/ansible/box.yml --ask-vault-pass

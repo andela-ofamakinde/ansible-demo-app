@@ -9,3 +9,8 @@ privateKey: /Users/user/.ssh/id_rsa
 account: andela-ofamakinde
 applicationRepo: git@github.com:andela-ofamakinde/ansible-demo-app.git
 repo: ansible-demo-app
+db_user: demo
+db_user_role: CREATEDB
+db_name: demo_app
+postgresql_version: 9.5
+ansible_ssh_pipelining: yes

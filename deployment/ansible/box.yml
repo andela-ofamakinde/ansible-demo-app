@@ -9,7 +9,7 @@
       raw: test -e /usr/bin/python || (apt -qqy update && apt install -qy python-minimal)
       become: yes
 
-    - name:  UNPRIVILEGED USERS | Get acl dependency (ansible unprivileged user operations magic)
+    - name: UNPRIVILEGED USERS | Get acl dependency (ansible unprivileged user operations magic)
       apt: pkg="acl"
       become: yes
 
@@ -18,6 +18,7 @@
 
   vars_files:
     - vars.yml
+    - secret_vars.yml
 
   tasks:
     - name: Bootstrap | Install Packages
@@ -28,6 +29,9 @@
 
     - name: Bootstrap | Clone Project Repo
       include: components/_clone_repo.yml
+
+    - name: Bootstrap | Install PostgreSQL
+      include: components/_install_postgres.yml
 
     - name: Bootstrap | Upstart
       include: components/_upstart.yml

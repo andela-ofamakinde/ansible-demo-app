@@ -1,0 +1,50 @@
+---
+  - name: PostgreSQL | Check if is installed
+    command: test -x /usr/bin/psql
+    register: psql_present
+    ignore_errors: yes
+    tags: psql
+
+  - name: PostgreSQL | Add GPG key to apt keyring
+    apt_key: url=https://www.postgresql.org/media/keys/ACCC4CF8.asc state=present
+    become: yes
+    when: psql_present|failed
+    tags: psql
+
+  - name: PostgreSQL | Add apt repository
+    apt_repository: repo="deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" state=present update_cache=yes
+    become: yes
+    when: psql_present|failed
+    tags: psql
+
+  - name: PostgreSQL | Install
+    apt: update-cache=yes force=yes state=present pkg={{item}}
+    with_items:
+      - "postgresql-{{postgresql_version}}"
+      - libpq-dev
+      - python-psycopg2
+    become: yes
+    when: psql_present|failed
+    tags: psql
+
+  - name: PostgreSQL | Ensure Service is Started
+    service: name="postgresql" state=started enabled=yes
+    become: yes
+    when: psql_present|failed
+    tags: psql
+
+  - name: PostgreSQL | Create database user
+    postgresql_user: name="{{db_user}}" password="{{db_password}}" role_attr_flags="{{db_user_role}}"
+    become_user: postgres
+    become: yes
+    register: db_user_created
+    tags:
+      - psql
+
+  - name: PostgreSQL | Create database
+    postgresql_db: name={{db_name}}
+    become_user: "{{db_user}}"
+    become: yes
+    when: db_user_created|succeeded
+    tags:
+      - psql
